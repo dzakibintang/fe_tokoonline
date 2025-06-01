@@ -18,17 +18,17 @@ export default function NavbarPelanggan() {
           </Link>
         </li>
         <li>
-          <Link href="/keranjang" className="hover:underline">
+          <Link href="/pelanggan/keranjang" className="hover:underline">
             Keranjang
           </Link>
         </li>
         <li>
-          <Link href="/transaksi" className="hover:underline">
+          <Link href="/pelanggan/transaksi" className="hover:underline">
             Transaksi
           </Link>
         </li>
         <li>
-          <Link href="/riwayat-transaksi" className="hover:underline">
+          <Link href="/pelanggan/riwayat-transaksi" className="hover:underline">
             Riwayat Transaksi
           </Link>
         </li>

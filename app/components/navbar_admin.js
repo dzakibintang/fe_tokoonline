@@ -18,17 +18,12 @@ export default function NavbarAdmin() {
           </Link>
         </li>
         <li>
-          <Link href="/keranjang" className="hover:underline">
-            Keranjang
-          </Link>
-        </li>
-        <li>
-          <Link href="/transaksi" className="hover:underline">
+          <Link href="/admin/transaksi" className="hover:underline">
             Transaksi
           </Link>
         </li>
         <li>
-          <Link href="/riwayat-transaksi" className="hover:underline">
+          <Link href="/admin/riwayat_transaksi" className="hover:underline">
             Riwayat Transaksi
           </Link>
         </li>

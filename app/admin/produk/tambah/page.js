@@ -1,169 +1,154 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
+import NavbarAdmin from '../../../components/navbar_admin';
+import Link from 'next/link';
 
-export default function ProdukForm() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const produkId = searchParams.get('id');
-
-  const [form, setForm] = useState({
+export default function TambahProduk() {
+  const [formData, setFormData] = useState({
     nama: '',
     deskripsi: '',
     harga: '',
     stok: '',
     gambar: null,
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
-  // Fetch data produk untuk edit jika ada id
-  useEffect(() => {
-    if (!produkId) return;
-    setLoading(true);
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/produk/${produkId}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-         Accept: 'application/json'
-      },
-    })
-      .then(async (res) => {
-        if (!res.ok) throw new Error('Produk tidak ditemukan');
-        return res.json();
-      })
-      .then((data) => {
-        setForm({
-          nama: data.nama,
-          deskripsi: data.deskripsi || '',
-          harga: data.harga,
-          stok: data.stok,
-          gambar: null, // gambar baru
-        });
-      })
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
-  }, [produkId]);
-
-  function handleChange(e) {
+  // Fungsi untuk menangani perubahan input form
+  const handleInputChange = (e) => {
     const { name, value, files } = e.target;
     if (name === 'gambar') {
-      setForm((prev) => ({ ...prev, gambar: files[0] }));
+      setFormData({ ...formData, gambar: files[0] });
     } else {
-      setForm((prev) => ({ ...prev, [name]: value }));
+      setFormData({ ...formData, [name]: value });
     }
-  }
+  };
 
-  async function handleSubmit(e) {
+  // Fungsi untuk menambahkan produk
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError('');
-
     try {
-      const formData = new FormData();
-      formData.append('nama', form.nama);
-      formData.append('deskripsi', form.deskripsi);
-      formData.append('harga', form.harga);
-      formData.append('stok', form.stok);
-      if (form.gambar) formData.append('gambar', form.gambar);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('Silakan login terlebih dahulu');
+        return;
+      }
 
-      const url = produkId
-        ? `${process.env.NEXT_PUBLIC_API_URL}/produk/${produkId}`
-        : `${process.env.NEXT_PUBLIC_API_URL}/produk`;
+      const formDataToSend = new FormData();
+      formDataToSend.append('nama', formData.nama);
+      formDataToSend.append('deskripsi', formData.deskripsi);
+      formDataToSend.append('harga', formData.harga);
+      formDataToSend.append('stok', formData.stok);
+      if (formData.gambar) {
+        formDataToSend.append('gambar', formData.gambar);
+      }
 
-      const method = produkId ? 'PUT' : 'POST';
-
-      const res = await fetch(url, {
-        method,
+      const res = await fetch('http://localhost:8000/api/produk', {
+        method: 'POST',
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-           Accept: 'application/json'
+          'Authorization': `Bearer ${token}`,
         },
-        body: formData,
+        body: formDataToSend,
       });
 
       if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || 'Gagal menyimpan produk');
+        const errorData = await res.json();
+        throw new Error(errorData.message || 'Gagal menambahkan produk');
       }
 
-      alert(produkId ? 'Produk berhasil diperbarui' : 'Produk berhasil ditambahkan');
-      router.push('/admin/produk');
+      setSuccess('Produk berhasil ditambahkan!');
+      setTimeout(() => {
+        setSuccess(null);
+        window.location.href = '/admin/produk';
+      }, 2000);
     } catch (err) {
       setError(err.message);
-    } finally {
-      setLoading(false);
+      setTimeout(() => setError(null), 3000);
     }
-  }
+  };
 
   return (
-    <div className="max-w-xl mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">{produkId ? 'Edit Produk' : 'Tambah Produk'}</h1>
-
-      {error && <p className="text-red-600 mb-4">{error}</p>}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block font-semibold mb-1">Nama</label>
-          <input
-            type="text"
-            name="nama"
-            value={form.nama}
-            onChange={handleChange}
-            required
-            className="w-full border border-gray-300 p-2 rounded"
-          />
+    <>
+      <NavbarAdmin />
+      <main className="p-6 bg-gray-100 min-h-screen">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold text-black">Tambah Produk Baru</h1>
+          <Link
+            href="/admin/produk"
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          >
+            Kembali
+          </Link>
         </div>
 
-        <div>
-          <label className="block font-semibold mb-1">Deskripsi</label>
-          <textarea
-            name="deskripsi"
-            value={form.deskripsi}
-            onChange={handleChange}
-            className="w-full border border-gray-300 p-2 rounded"
-          />
-        </div>
+        {success && <div className="p-4 mb-4 bg-green-100 text-green-700 rounded">{success}</div>}
+        {error && <div className="p-4 mb-4 bg-red-100 text-red-700 rounded">{error}</div>}
 
-        <div>
-          <label className="block font-semibold mb-1">Harga</label>
-          <input
-            type="number"
-            name="harga"
-            value={form.harga}
-            onChange={handleChange}
-            required
-            className="w-full border border-gray-300 p-2 rounded"
-            min="0"
-          />
+        <div className="bg-white rounded-lg shadow-md p-6 max-w-md mx-auto">
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <label className="block text-black mb-2">Nama Produk</label>
+              <input
+                type="text"
+                name="nama"
+                value={formData.nama}
+                onChange={handleInputChange}
+                className="w-full p-2 border rounded text-black"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-black mb-2">Deskripsi</label>
+              <textarea
+                name="deskripsi"
+                value={formData.deskripsi}
+                onChange={handleInputChange}
+                className="w-full p-2 border rounded text-black"
+                rows="3"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-black mb-2">Harga</label>
+              <input
+                type="number"
+                name="harga"
+                value={formData.harga}
+                onChange={handleInputChange}
+                className="w-full p-2 border rounded text-black"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-black mb-2">Stok</label>
+              <input
+                type="number"
+                name="stok"
+                value={formData.stok}
+                onChange={handleInputChange}
+                className="w-full p-2 border rounded text-black"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-black mb-2">Gambar (opsional)</label>
+              <input
+                type="file"
+                name="gambar"
+                accept="image/*"
+                onChange={handleInputChange}
+                className="w-full p-2 border rounded text-black"
+              />
+            </div>
+            <button
+              type="submit"
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 w-full"
+            >
+              Tambah
+            </button>
+          </form>
         </div>
-
-        <div>
-          <label className="block font-semibold mb-1">Stok</label>
-          <input
-            type="number"
-            name="stok"
-            value={form.stok}
-            onChange={handleChange}
-            required
-            className="w-full border border-gray-300 p-2 rounded"
-            min="0"
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold mb-1">Gambar (opsional)</label>
-          <input type="file" name="gambar" accept="image/*" onChange={handleChange} />
-        </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-        >
-          {loading ? 'Menyimpan...' : 'Simpan'}
-        </button>
-      </form>
-    </div>
+      </main>
+    </>
   );
 }
