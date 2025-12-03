@@ -21,7 +21,7 @@ export default function KeranjangPelanggan() {
           return;
         }
 
-        const res = await fetch('http://localhost:8000/api/keranjang', {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/keranjang`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',

@@ -24,7 +24,7 @@ export default function ProdukPelanggan() {
           return;
         }
 
-        const res = await fetch('http://localhost:8000/api/produk', {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/produk`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ export default function ProdukPelanggan() {
         return;
       }
 
-      const res = await fetch('http://localhost:8000/api/keranjang', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/keranjang`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -117,7 +117,7 @@ export default function ProdukPelanggan() {
                 <img
                   src={
                     item.gambar
-                      ? `http://localhost:8000/storage/${item.gambar}`
+                      ? `${process.env.NEXT_PUBLIC_API_URL}/storage/${item.gambar}`
                       : 'https://via.placeholder.com/300x200'
                   }
                   alt={item.nama}

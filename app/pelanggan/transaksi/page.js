@@ -21,7 +21,7 @@ export default function TransaksiPelanggan() {
           return;
         }
 
-        const res = await fetch('http://localhost:8000/api/transaksi/saya', {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transaksi/saya`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -117,7 +117,7 @@ export default function TransaksiPelanggan() {
                   <strong>Bukti Pembayaran:</strong>
                 </p>
                 <img
-                  src={`http://localhost:8000/storage/${selectedTransaksi.bukti_pembayaran}`}
+                  src={`${process.env.NEXT_PUBLIC_API_URL}/storage/${selectedTransaksi.bukti_pembayaran}`}
                   alt="Bukti Pembayaran"
                   className="w-full h-48 object-contain rounded-md mb-4"
                 />

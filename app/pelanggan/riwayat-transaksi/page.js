@@ -21,7 +21,7 @@ export default function RiwayatTransaksiPelanggan() {
           return;
         }
 
-        const res = await fetch('http://localhost:8000/api/riwayat-transaksi', {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/riwayat-transaksi`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -112,7 +112,7 @@ export default function RiwayatTransaksiPelanggan() {
                   <strong>Bukti Pembayaran:</strong>
                 </p>
                 <img
-                  src={`http://localhost:8000/storage/${selectedRiwayat.bukti_pembayaran}`}
+                  src={`${process.env.NEXT_PUBLIC_API_URL}/storage/${selectedRiwayat.bukti_pembayaran}`}
                   alt="Bukti Pembayaran"
                   className="w-full h-48 object-contain rounded-md mb-4"
                 />

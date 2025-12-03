@@ -21,7 +21,7 @@ export default function DetailProduk() {
           return;
         }
 
-        const res = await fetch(`http://localhost:8000/api/produk/${id}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/produk/${id}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export default function DetailProduk() {
           <img
             src={
               produk.gambar
-                ? `http://localhost:8000/storage/${produk.gambar}`
+                ? `${process.env.NEXT_PUBLIC_API_URL}/storage/${produk.gambar}`
                 : 'https://via.placeholder.com/400x300'
             }
             alt={produk.nama}

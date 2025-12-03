@@ -30,7 +30,7 @@ export default function HomeAdmin() {
           return;
         }
 
-        const res = await fetch('http://localhost:8000/api/produk', {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/produk`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ export default function HomeAdmin() {
       }
       formDataToSend.append('_method', 'PUT'); // Laravel memerlukan ini untuk PUT dengan form-data
 
-      const res = await fetch(`http://localhost:8000/api/produk/${selectedProduk.id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/produk/${selectedProduk.id}`, {
         method: 'POST', // Menggunakan POST karena form-data dengan PUT sering bermasalah
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -124,7 +124,7 @@ export default function HomeAdmin() {
     if (confirm('Apakah Anda yakin ingin menghapus produk ini?')) {
       try {
         const token = localStorage.getItem('token');
-        const res = await fetch(`http://localhost:8000/api/produk/${produkId}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/produk/${produkId}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -169,7 +169,7 @@ export default function HomeAdmin() {
                 <img
                   src={
                     item.gambar
-                      ? `http://localhost:8000/storage/${item.gambar}`
+                      ? `${process.env.NEXT_PUBLIC_API_URL}/storage/${item.gambar}`
                       : 'https://via.placeholder.com/300x200'
                   }
                   alt={item.nama}

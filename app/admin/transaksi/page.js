@@ -23,7 +23,7 @@ export default function TransaksiAdmin() {
           return;
         }
 
-        const res = await fetch('http://localhost:8000/api/transaksi', {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transaksi`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export default function TransaksiAdmin() {
   const handleUpdateStatus = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`http://localhost:8000/api/transaksi/${selectedTransaksi.id}/status`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transaksi/${selectedTransaksi.id}/status`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -152,7 +152,7 @@ export default function TransaksiAdmin() {
                   <strong>Bukti Pembayaran:</strong>
                 </p>
                 <img
-                  src={`http://localhost:8000/storage/${selectedTransaksi.bukti_pembayaran}`}
+                  src={`${process.env.NEXT_PUBLIC_API_URL}/storage/${selectedTransaksi.bukti_pembayaran}`}
                   alt="Bukti Pembayaran"
                   className="w-full h-48 object-contain rounded-md mb-4"
                 />

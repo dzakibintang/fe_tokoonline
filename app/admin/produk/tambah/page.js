@@ -44,7 +44,7 @@ export default function TambahProduk() {
         formDataToSend.append('gambar', formData.gambar);
       }
 
-      const res = await fetch('http://localhost:8000/api/produk', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/produk`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
